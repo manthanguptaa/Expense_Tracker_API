@@ -28,7 +28,7 @@ create table et_transactions(
     transaction_id integer primary key not null,
     category_id integer not null,
     user_id integer not null,
-    amount number(10,2) not null,
+    amount numeric(10,2) not null,
     note varchar(50) not null,
     transaction_date bigint not null
 );
