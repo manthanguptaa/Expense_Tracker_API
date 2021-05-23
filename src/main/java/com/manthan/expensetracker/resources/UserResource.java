@@ -1,8 +1,10 @@
 package com.manthan.expensetracker.resources;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.manthan.expensetracker.Constants;
 import com.manthan.expensetracker.domain.User;
 import com.manthan.expensetracker.services.UserService;
 
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
 @RequestMapping("/api/users")
@@ -27,9 +32,7 @@ public class UserResource {
         String email = (String) userMap.get("email");
         String password = (String) userMap.get("password");
         User user = userService.validatUser(email, password);
-        Map<String,String> map = new HashMap<>();
-        map.put("message","Login Successfull");
-        return new ResponseEntity<>(map, HttpStatus.OK);        
+        return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);        
     }
     
     @PostMapping("/register")
@@ -39,8 +42,21 @@ public class UserResource {
         String email = (String) userMap.get("email");
         String password = (String) userMap.get("password");
         User user = userService.registeUser(firstName, lastName, email, password);
+        return new ResponseEntity<>(generateJWTToken(user),HttpStatus.OK);
+    }
+
+    private Map<String,String> generateJWTToken(User user){
+        long timeStamp = System.currentTimeMillis();
+        String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_SECRET_KEY)
+                        .setIssuedAt(new Date(timeStamp))
+                        .setExpiration(new Date(timeStamp + Constants.TOKEN_VALIDITY))
+                        .claim("userId",user.getUserId())
+                        .claim("email", user.getEmail())
+                        .claim("firstName", user.getFirstName())
+                        .claim("lastName",user.getLastName())
+                        .compact();
         Map<String,String> map = new HashMap<>();
-        map.put("messgae","Registered Successfully");
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        map.put("token",token);
+        return map;
     }
 }
