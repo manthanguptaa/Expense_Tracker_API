@@ -19,8 +19,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User validatUser(String email, String password) throws EtAuthException {
-        // TODO Auto-generated method stub
-        return null;
+        if(email!=null)email =email.toLowerCase();
+        return userRepository.findByEmailAndPassword(email, password);
     }
 
     @Override
