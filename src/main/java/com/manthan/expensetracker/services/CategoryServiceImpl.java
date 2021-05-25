@@ -21,7 +21,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public List<Category> fetchAllCategories(Integer userId) {
         // TODO Auto-generated method stub
-        return null;
+        return categoryRepository.findAll(userId);
     }
 
     @Override

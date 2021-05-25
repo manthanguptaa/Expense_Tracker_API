@@ -1,5 +1,6 @@
 package com.manthan.expensetracker.resources;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.manthan.expensetracker.domain.Category;
 import com.manthan.expensetracker.services.CategoryService;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +27,10 @@ public class CategoryResource {
     CategoryService categoryService;
     
     @GetMapping("")
-    public String getAllCategories(HttpServletRequest request){
+    public ResponseEntity<List<Category>> getAllCategories(HttpServletRequest request){
         int userId = (Integer) request.getAttribute("userId");
-        return "Authenticated UserId!"+ userId;
+        List<Category> categories = categoryService.fetchAllCategories(userId);
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     @GetMapping("/{categoryId}")
