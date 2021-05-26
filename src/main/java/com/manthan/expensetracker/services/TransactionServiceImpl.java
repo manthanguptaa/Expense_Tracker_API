@@ -21,7 +21,7 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     public List<Transaction> fetchAllTransactions(Integer userId, Integer categoryId) {
         // TODO Auto-generated method stub
-        return null;
+        return transactionRepository.findAll(userId, categoryId);
     }
 
     @Override
