@@ -28,7 +28,7 @@ public class TransactionServiceImpl implements TransactionService{
     public Transaction fetchTransactionById(Integer userId, Integer categoryId, Integer transactionId)
             throws EtResourceNotFoundException {
         // TODO Auto-generated method stub
-        return null;
+        return transactionRepository.findById(userId, categoryId, transactionId);
     }
 
     @Override
